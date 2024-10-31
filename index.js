@@ -2,6 +2,7 @@
 import express, { json } from 'express';
 import mysql from 'mysql2/promise';
 import cors from 'cors';
+import { sendMyMail } from './mail.js';
 
 // --- On crée le serveur http "express"
 const app = express();
@@ -18,6 +19,22 @@ const connection = await mysql.createConnection({
     database: 'pharmeo',
     port: '3306',
     password: 'Kyo100705tete*',
+});
+
+// Mes routes
+app.get('/test', function (req, res)
+{
+    res.json({
+      status : "ok"
+    });
+});
+
+app.post('/sendmail', function(req, res)
+{
+  let to = req.body.to;
+  let subject = req.body.subject;
+  let text = req.body.text;
+  sendMyMail(to, subject, text);
 });
 
 // --- On dit au serveur d'écouter sur le port 3000
