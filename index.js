@@ -3,7 +3,8 @@ import express, { json } from 'express';
 import mysql from 'mysql2/promise';
 import cors from 'cors';
 import { sendMyMail } from './mail.js';
-import { config } from 'dotenv';
+import dotenv from 'dotenv'
+dotenv.config()
 
 // --- On crée le serveur http "express"
 const app = express();
@@ -16,10 +17,10 @@ app.use(cors());
 // --- On se connecte à MySQL
 const connection = await mysql.createConnection({
     host: process.env.HOST,
-    user: process.env.USER,
+    user: process.env.DB_USER,
     database: process.env.DATABASE,
     port: process.env.PORT,
-    password: process.env.PASSWORD,
+    password: process.env.PASSWORD
 });
 
 // Mes routes
@@ -34,7 +35,6 @@ app.get('/test', function (req, res)
 app.post('/createClient', function(req, res)
 {
   // --- On récupère les données sur le client envoyé dans le body en json
-  let identifiant = req.body.identifiant;
   let fk_profil = req.body.fk_profil;
   let nom_compte = req.body.nom_compte;
   let mot_de_passe = req.body.mot_de_passe;
