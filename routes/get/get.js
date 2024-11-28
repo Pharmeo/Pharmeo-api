@@ -2,23 +2,21 @@ export default function (app, connection)
 {
   app.get('/test', function (req, res)
   {
-      res.json({
-        status : "ok"
+      return res.json({
+        status : "ok tout fonctionne"
       });
   });
 
-  // --- Permet de récupérer tous lles médicaments
-  /*
-  app.get('getAllMedicaments', function(req, res)
+  // --- Permet de récupérer tous les médicaments
+  app.get('/medicaments', async function (req, res)
   {
-    connection.query('SELECT * FROM medicaments');
+   const medicaments = await connection.query('SELECT * FROM medicaments');
 
     // --- On renvoie un tableau de json
-    res.json({
-
+    return res.json({
+      medicaments
     });
   });
-  */
 
   /*
   app.get('/getMedicament', function(req, res)

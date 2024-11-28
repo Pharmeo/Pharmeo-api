@@ -11,7 +11,7 @@ Pour tester les mails :
 -> Se connecter localhost:8025
 */
 
-// --- La fonction per
+// --- La fonction pour envoyer un mail
 function sendMyMail(mTo, mSubject, mText)
 {
     var mailOptions = {
