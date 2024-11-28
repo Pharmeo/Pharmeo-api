@@ -32,6 +32,16 @@ export default function (app, connection, sendMyMail)
     let text = req.body.text;
     sendMyMail(to, subject, text);
   });
+
+  app.post('/compte', async function(req,res) {
+    let name = req.body.name;
+
+    let compte = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[name])
+
+    return res.json({
+      compte: compte[0]
+    });
+  })
 }
 
 
