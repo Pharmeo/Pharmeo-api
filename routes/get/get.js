@@ -14,7 +14,7 @@ export default function (app, connection)
 
     // --- On renvoie un tableau de json
     return res.json({
-      medicaments
+      medicaments : medicaments[0]
     });
   });
 
@@ -25,4 +25,3 @@ export default function (app, connection)
   });
   */
 }
-
