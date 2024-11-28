@@ -1,17 +1,9 @@
 import nodemailer from 'nodemailer';
 
 var transporter = nodemailer.createTransport({
-    service: 'gmail',  // ou ton service (Gmail, Outlook, etc.)
-    auth: {
-      user: 'pharmeo3@gmail.com',  // Remplace par ton adresse email
-      pass: 'pharmeo2024'      // Remplace par ton mot de passe ou mot de passe d'application
-    }
-});
-
-/* Pour mail pit
-   host: "127.0.0.1",
+    host: "127.0.0.1",
     port: 1025,
-*/
+});
 
 // TODO : Changer le smtp lors de la mise en prod
 /*
