@@ -31,6 +31,10 @@ export default function (app, connection, sendMyMail)
     let subject = req.body.subject;
     let text = req.body.text;
     sendMyMail(to, subject, text);
+
+    return res.json({
+      message: "Email envoyé avec succès"
+    })
   });
 
   app.post('/compte', async function(req,res) {

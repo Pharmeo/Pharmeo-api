@@ -29,7 +29,7 @@ export default function (app, connection)
 
   app.get('/search/:search', async function(req,res) {
     
-    let nameDrug = request.params.search;
+    let nameDrug = req.params.search;
 
     let drug = await connection.query('SELECT * FROM medicaments WHERE nom=? ',[nameDrug])
 
