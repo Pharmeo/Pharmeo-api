@@ -43,6 +43,18 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
+  app.post('/compte', authMiddleware, async function(req, res) {
+
+    const name = req.body.name;
+    const [compte] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[name]);
+
+    return res.json({
+      compte: compte[0]
+    });
+  });
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
   app.post('/login', async function(req,res) 
   {
     let name = req.body.name;

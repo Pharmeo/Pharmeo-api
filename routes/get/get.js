@@ -48,7 +48,7 @@ export default function (app, connection, authMiddleware)
   //-----------------------------------------------------------------------------
   app.get('/medicaments/:page', authMiddleware, async function (req, res)
   {
-    // On calcule le nombre de médicaments à récupérer
+    // --- On calcule le nombre de médicaments à récupérer
     const page = req.params.page;
     const offset = (25*page) - 25;
 
