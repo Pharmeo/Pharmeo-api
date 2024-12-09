@@ -42,6 +42,16 @@ export default function (app, connection, sendMyMail)
       compte: compte[0]
     });
   })
+
+  app.post('/oublimdp', async function(req,res) {
+    let name = req.body.name;
+
+    let mdp = await connection.query('SELECT mot_de_passe FROM comptes WHERE nom_compte=? ',[name])
+
+    return res.json({
+      mdp: mdp[0]
+    });
+  })
 }
 
 

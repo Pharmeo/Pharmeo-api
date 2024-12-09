@@ -1,3 +1,5 @@
+import { request } from "express";
+
 export default function (app, connection) 
 {
   app.get('/test', function (req, res)
@@ -24,4 +26,18 @@ export default function (app, connection)
 
   });
   */
+
+  app.get('/search/:search', async function(req,res) {
+    
+    let nameDrug = request.params.search;
+
+    let drug = await connection.query('SELECT * FROM medicaments WHERE nom=? ',[nameDrug])
+
+    return res.json({
+      drug: nameDrug[0]
+    });
+  })
+
 }
+
+
