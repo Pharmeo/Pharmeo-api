@@ -3,6 +3,7 @@ import express, { json } from 'express';
 import mysql from 'mysql2/promise';
 import cors from 'cors';
 import { sendMyMail } from './mail.js';
+import jsonwebtoken from 'jsonwebtoken';
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -31,6 +32,24 @@ const connection = await mysql.createConnection({
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+// --- On vérifie le token
+const authMiddleware = async (req, res, next) => {
+  try {
+      const decodedToken = await jsonwebtoken.verify(
+          req.headers.authorization, 
+          process.env.SECRET_KEY_TOKEN
+      );
+
+      next();
+  } catch (error) {
+      return res.status(403).json({
+          message: "Vous n'avez pas l'autorisation"
+      });
+  }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // --- On récupère toutes les routes nécéssaires au fonctionnement de l'API
 // TODO : Il y a une erreur dans la manière d'importer
 import routesPost from './routes/post/post.js';
@@ -38,9 +57,9 @@ import routesGet from './routes/get/get.js';
 import routesDelete from './routes/delete/delete.js';
 //import routes from './routes.js';
 // ---
-routesPost(app, connection, sendMyMail);
-routesGet(app, connection);
-routesDelete(app, connection);
+routesPost(app, connection, sendMyMail, authMiddleware);
+routesGet(app, connection, authMiddleware);
+routesDelete(app, connection, authMiddleware);
 //routes(app, connection);
 
 //-----------------------------------------------------------------------------

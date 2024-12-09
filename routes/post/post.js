@@ -1,7 +1,11 @@
-export default function (app, connection, sendMyMail) 
+import jsonwebtoken from 'jsonwebtoken';
+
+export default function (app, connection, sendMyMail, authMiddleware) 
 {
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
   // --- Créer un utilisateur
-  app.post('/createClient', function(req, res)
+  app.post('/createClient', authMiddleware, function(req, res)
   {
     // --- On récupère les données sur le client envoyé dans le body en json
     let fk_profil = req.body.fk_profil;
@@ -25,7 +29,7 @@ export default function (app, connection, sendMyMail)
     });
   });
 
-  app.post('/sendmail', function(req, res)
+  app.post('/sendmail', authMiddleware, function(req, res)
   {
     let to = req.body.to;
     let subject = req.body.subject;
@@ -37,17 +41,50 @@ export default function (app, connection, sendMyMail)
     })
   });
 
-  app.post('/compte', async function(req,res) {
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.post('/login', async function(req,res) 
+  {
     let name = req.body.name;
+    let [compte] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[name])
 
-    let compte = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[name])
+    if (compte.length == 0) {
+      return res.status(404).json({
+        message: 'Identifiant ou mot de passe incorrect'
+      });
+    }
+
+    let bddPassword = compte[0].mot_de_passe;
+    let formPassword = req.body.password;
+    
+    if (formPassword != bddPassword)
+    {
+      return res.status(404).json({
+        message: 'Identifiant ou mot de passe incorrect'
+      });
+    }
+
+    // --- Créer le token
+    const token = await jsonwebtoken.sign(
+      {
+        //C'est l'objet qui contient les informations que l'on veut transmettre
+        name
+      },
+      process.env.SECRET_KEY_TOKEN,
+      {
+        // C'est la clé qui permet de générer les tokens
+          expiresIn: '24h'
+      }
+    );
 
     return res.json({
-      compte: compte[0]
+      token: token
     });
   })
 
-  app.post('/oublimdp', async function(req,res) {
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.post('/oublimdp', authMiddleware, async function(req,res) {
     let name = req.body.name;
 
     let mdp = await connection.query('SELECT mot_de_passe FROM comptes WHERE nom_compte=? ',[name])
