@@ -5,7 +5,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
   // --- Créer un utilisateur
-  app.post('/createClient', authMiddleware, function(req, res)
+  app.post('/createClient', function(req, res)
   {
     // --- On récupère les données sur le client envoyé dans le body en json
     let fk_profil = req.body.fk_profil;
@@ -29,7 +29,9 @@ export default function (app, connection, sendMyMail, authMiddleware)
     });
   });
 
-  app.post('/sendmail', authMiddleware, function(req, res)
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.post('/sendmail', function(req, res)
   {
     let to = req.body.to;
     let subject = req.body.subject;

@@ -37,7 +37,7 @@ export default function (app, connection, authMiddleware)
     
     let nameDrug = req.params.search;
 
-    let medicaments = await connection.query('SELECT * FROM medicaments WHERE nom LIKE ? ', [`%${nameDrug}`])
+    let medicaments = await connection.query('SELECT * FROM medicaments WHERE nom LIKE ? ', [`%${nameDrug}%`])
 
     return res.json({
       medicaments: medicaments[0]

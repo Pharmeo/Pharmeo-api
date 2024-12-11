@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 var transporter = nodemailer.createTransport({
     host: "127.0.0.1",
-    port: 1025,
+    port: 1025
 });
 
 // TODO : Changer le smtp lors de la mise en prod
