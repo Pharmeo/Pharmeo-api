@@ -16,7 +16,7 @@ Pour tester les mails :
 function sendMyMail(mTo, mFirstname, mPassword)
 {
     var mailOptions = {
-    from: 'esteban.gonzaleztessier@gmail.com',
+    from: 'pharmeo3@gmail.com',
     to: mTo,
     subject: 'Envoie de votre mot de passe',
     html:

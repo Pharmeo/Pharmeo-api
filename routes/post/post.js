@@ -34,7 +34,6 @@ export default function (app, connection, sendMyMail, authMiddleware)
   app.post('/sendmail', async function(req, res)
   {
     let to = req.body.to;
-    let subject = req.body.subject;
 
     // TODO : Récupérer l'utilisateur via son identifiant (soit le mail)
     const [user] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[to]);
@@ -47,6 +46,9 @@ export default function (app, connection, sendMyMail, authMiddleware)
     
     let firstname = user[0].prenom;
     let password = user[0].mot_de_passe;
+
+    console.log(firstname+" "+password);
+    
     
     sendMyMail(to, firstname, password);
 
