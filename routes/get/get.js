@@ -41,7 +41,7 @@ export default function (app, connection, authMiddleware)
     let typeSystem = req.query.system;
     console.log(nameDrug);
     console.log(typeSystem);
-    
+
 
     // --- On crée la requête SQL de base
     let sql = 'SELECT * FROM medicaments';
@@ -82,7 +82,6 @@ export default function (app, connection, authMiddleware)
 
     let medicaments = await connection.query(sql, tab)
     console.log(sql);
-    
 
     // --- On retourne le/les médicament(s)
     return res.json({
