@@ -55,12 +55,12 @@ const authMiddleware = async (req, res, next) => {
 import routesPost from './routes/post/post.js';
 import routesGet from './routes/get/get.js';
 import routesDelete from './routes/delete/delete.js';
-//import routes from './routes.js';
+import routesPatch from './routes/patch/patch.js';
 // ---
 routesPost(app, connection, sendMyMail, authMiddleware);
 routesGet(app, connection, authMiddleware);
 routesDelete(app, connection, authMiddleware);
-//routes(app, connection);
+routesPatch(app, connection, authMiddleware);
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
