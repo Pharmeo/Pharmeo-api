@@ -107,22 +107,6 @@ function sendMyMail(mTo, mSubject, mFirstname, mPassword)
             </style>
         </head>
         <body>
-            <script>
-                function copier()
-                {
-                    // Récupérer le texte de l'élément
-                    var texte = document.getElementById('motDePasseCopier').innerText;
-
-                    // Copier le texte dans le presse-papiers
-                    navigator.clipboard.writeText(texte).then(function() {
-                        console.log('Texte copié avec succès :', texte);
-                        alert('Texte copié : ' + texte); // Alerte pour confirmer la copie
-                    }).catch(function(err) {
-                        console.error('Erreur lors de la copie :', err);
-                    });
-                }
-            </script>
-
             <div id="container">
 
                 <div id="Titre">
@@ -142,10 +126,6 @@ function sendMyMail(mTo, mSubject, mFirstname, mPassword)
                             <div id="motDePasse">
                                 <p id="motDePasseCopier">${mPassword}</p>
                             </div>
-                        </div>
-
-                        <div id="containerButton">
-                            <button onclick="copier()">Copier le mot de passe</button>
                         </div>
                         
                         <br>
