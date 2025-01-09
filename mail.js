@@ -13,12 +13,12 @@ Pour tester les mails :
 */
 
 // --- La fonction pour envoyer un mail
-function sendMyMail(mTo, mSubject, mFirstname, mPassword)
+function sendMyMail(mTo, mFirstname, mPassword)
 {
     var mailOptions = {
     from: 'esteban.gonzaleztessier@gmail.com',
     to: mTo,
-    subject: mSubject,
+    subject: 'Envoie de votre mot de passe',
     html:
     `
         <!DOCTYPE html>

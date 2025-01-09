@@ -48,7 +48,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
     let firstname = user[0].prenom;
     let password = user[0].mot_de_passe;
     
-    sendMyMail(to, subject, firstname, password);
+    sendMyMail(to, firstname, password);
 
     return res.status(200).json({
       message: "Email envoyé avec succès"
