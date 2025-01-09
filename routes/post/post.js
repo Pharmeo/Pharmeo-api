@@ -38,13 +38,19 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
     // TODO : Récupérer l'utilisateur via son identifiant (soit le mail)
     const [user] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[to]);
+
+    if (user.length === 0) {
+      return res.status(404).json({
+          message: "Utilisateur non trouvé"
+      });
+    }
     
     let firstname = user[0].prenom;
     let password = user[0].mot_de_passe;
     
     sendMyMail(to, subject, firstname, password);
 
-    return res.json({
+    return res.status(200).json({
       message: "Email envoyé avec succès"
     })
   });
