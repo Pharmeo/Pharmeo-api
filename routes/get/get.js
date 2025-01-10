@@ -4,6 +4,7 @@ export default function (app, connection, authMiddleware)
 {
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
+  // --- Simple test permettant de vérifier qu'il est possible d'utiliser l'API
   app.get('/test', function (req, res)
   {
       return res.json({
@@ -13,28 +14,7 @@ export default function (app, connection, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  // --- Permet de récupérer tous les médicaments
-  /*
-  app.get('/medicaments', authMiddleware, async function (req, res)
-  {
-   const medicaments = await connection.query('SELECT * FROM medicaments');
-
-    // --- On renvoie un tableau de json
-    return res.json({
-      medicaments: medicaments[0]
-    });
-  });
-  */
-
-  /*
-  app.get('/getMedicament', function(req, res)
-  {
-
-  });
-  */
-
-  //-----------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------
+  // --- Permet de récupérer l'intégralité de tous les médicaments
   app.get('/medicaments', authMiddleware, async function(req,res) {
     
     let nameDrug = req.query.name;
@@ -91,6 +71,7 @@ export default function (app, connection, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
+  // --- Permet de faire la pagination en calculant un certain de nombre de médicaments à répartir
   app.get('/medicaments/:page', authMiddleware, async function (req, res)
   {
     // --- On calcule le nombre de médicaments à récupérer

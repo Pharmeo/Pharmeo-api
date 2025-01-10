@@ -12,6 +12,8 @@ Pour tester les mails :
 -> Se connecter localhost:8025
 */
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // --- La fonction pour envoyer un mail
 function sendMyMail(mTo, mFirstname, mPassword)
 {
@@ -161,6 +163,8 @@ function sendMyMail(mTo, mFirstname, mPassword)
     });
 }
 
-// --- J'exporte la fonction pour qu'elle soit utilisable dans les autres classes
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// --- On exporte la fonction pour qu'elle soit utilisable dans les autres classes
 export {sendMyMail};
 

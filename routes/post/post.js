@@ -4,7 +4,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
 {
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  // --- Créer un utilisateur
+  // --- Permet de créer un utilisateur
   app.post('/createClient', function(req, res)
   {
     // --- On récupère les données sur le client envoyé dans le body en json
@@ -35,7 +35,6 @@ export default function (app, connection, sendMyMail, authMiddleware)
   {
     let to = req.body.to;
 
-    // TODO : Récupérer l'utilisateur via son identifiant (soit le mail)
     const [user] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[to]);
 
     if (user.length === 0) {
@@ -46,9 +45,6 @@ export default function (app, connection, sendMyMail, authMiddleware)
     
     let firstname = user[0].prenom;
     let password = user[0].mot_de_passe;
-
-    console.log(firstname+" "+password);
-    
     
     sendMyMail(to, firstname, password);
 
@@ -100,7 +96,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
       },
       process.env.SECRET_KEY_TOKEN,
       {
-        // C'est la clé qui permet de générer les tokens
+          // Clé permettant de générer les tokens
           expiresIn: '24h'
       }
     );
@@ -112,7 +108,8 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  app.post('/oublimdp', authMiddleware, async function(req,res) {
+  app.post('/oublimdp', authMiddleware, async function(req,res) 
+  {
     let name = req.body.name;
 
     let mdp = await connection.query('SELECT mot_de_passe FROM comptes WHERE nom_compte=? ',[name])
