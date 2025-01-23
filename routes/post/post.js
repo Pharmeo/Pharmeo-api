@@ -19,6 +19,8 @@ export default function (app, connection, sendMyMail, authMiddleware)
     let ville = req.body.ville;
     let code_postal = req.body.code_postal;
 
+    // TODO : Ajouter le hashage du mot de passe
+
     // --- Création de la requête sql
     connection.query('INSERT INTO comptes (fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal) VALUES (?,?,?,?,?,?,?,?,?,?)', 
     [fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal]);
