@@ -120,6 +120,34 @@ export default function (app, connection, sendMyMail, authMiddleware)
       mdp: mdp[0]
     });
   })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.post('/addfavoris', authMiddleware, async function(req,res) 
+  {
+    let idMedicament = req.body.idMedicament;
+    let idCompte = req.body.idCompte;
+
+    connection.query('INSERT INTO favoris (id_medicament, id_compte) VALUES (?, ?)',[idMedicament, idCompte])
+
+    // --- La réponse à la requête
+    res.json({
+      status : "ok"
+    });
+  })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.post('/id', authMiddleware, async function(req,res) 
+  {
+    let nom_compte = req.body.nom_compte;
+    let [compte] = await connection.query('SELECT * FROM comptes WHERE nom_compte = ?',[nom_compte])
+    let idCompte = compte[0].identifiant;    
+    
+    res.json({
+      id_compte : idCompte
+    });
+  })
 }
 
 

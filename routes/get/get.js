@@ -19,8 +19,6 @@ export default function (app, connection, authMiddleware)
     
     let nameDrug = req.query.name;
     let typeSystem = req.query.system;
-    console.log(nameDrug);
-    console.log(typeSystem);
 
     // --- On crée la requête SQL de base
     let sql = 'SELECT * FROM medicaments';
@@ -83,6 +81,20 @@ export default function (app, connection, authMiddleware)
       medicaments: medicaments[0]
     });
   });
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.get('/favoris/:idCompte', authMiddleware, async function(req,res) 
+  {
+    let idCompte = req.params.idCompte;
+
+    let [favoris] = await connection.query('SELECT * FROM favoris INNER JOIN medicaments ON favoris.id_medicament = medicaments.identifiant WHERE id_compte =?',[idCompte])
+
+    // --- La réponse à la requête
+    res.json({
+      favoris : favoris
+    });
+  })
 }
 
 
