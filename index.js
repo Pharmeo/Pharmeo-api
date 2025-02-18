@@ -5,6 +5,7 @@ import cors from 'cors';
 import { sendMyMail } from './mail.js';
 import jsonwebtoken from 'jsonwebtoken';
 import dotenv from 'dotenv'
+import { hashPassword, verifyPassword } from './passwordUtils.js';
 dotenv.config()
 
 //-----------------------------------------------------------------------------

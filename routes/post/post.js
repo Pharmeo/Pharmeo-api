@@ -1,11 +1,12 @@
 import jsonwebtoken from 'jsonwebtoken';
+import { hashPassword, verifyPassword } from '../../passwordUtils.js';
 
 export default function (app, connection, sendMyMail, authMiddleware) 
 {
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
   // --- Permet de créer un utilisateur
-  app.post('/createClient', function(req, res)
+  app.post('/createClient', async function(req, res)
   {
     // --- On récupère les données sur le client envoyé dans le body en json
     let fk_profil = req.body.fk_profil;
@@ -19,11 +20,12 @@ export default function (app, connection, sendMyMail, authMiddleware)
     let ville = req.body.ville;
     let code_postal = req.body.code_postal;
 
-    // TODO : Ajouter le hashage du mot de passe
+    let motDePasseHashe = await hashPassword(mot_de_passe);
+    console.log(motDePasseHashe);
 
     // --- Création de la requête sql
-    connection.query('INSERT INTO comptes (fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal) VALUES (?,?,?,?,?,?,?,?,?,?)', 
-    [fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal]);
+    await connection.query('INSERT INTO comptes (fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal) VALUES (?,?,?,?,?,?,?,?,?,?)', 
+    [fk_profil, nom_compte, motDePasseHashe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal]);
 
     // --- Renvoie de la réponse
     res.json({
@@ -82,15 +84,30 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
     let bddPassword = compte[0].mot_de_passe;
     let formPassword = req.body.password;
-    
-    if (formPassword != bddPassword)
+
+    // --- Hashage et vérification du mot de passe
+    let motDePasseHashe = await hashPassword(formPassword, (err, hashedPassword) => {
+      if (err) 
+      {
+          console.error('Erreur lors du hachage du mot de passe:', err);
+          return;
+      }
+    });
+    let isMatch = verifyPassword(bddPassword, motDePasseHashe, (err, isMatch) => {
+      if (err) {
+          console.error('Erreur lors de la vérification du mot de passe:', err);
+          return;
+      }
+      console.log('Le mot de passe correspond-il ?', isMatch);
+    });
+    if (!isMatch)
     {
       return res.status(404).json({
         message: 'Identifiant ou mot de passe incorrect'
       });
     }
 
-    // --- Créer le token
+    // ---  Création du token
     const token = await jsonwebtoken.sign(
       {
         //C'est l'objet qui contient les informations que l'on veut transmettre
