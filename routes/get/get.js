@@ -95,6 +95,20 @@ export default function (app, connection, authMiddleware)
       favoris : favoris
     });
   })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.get('/medicaments/infosSupplementaires/:idMedicament', authMiddleware, async function(req,res) 
+  {
+    let idMedicament = req.params.idMedicament;
+
+    let [infosSupplementaires] = await connection.query('SELECT * FROM relations_pharmacies_medicaments WHERE identifiant_medicament = ?',[idMedicament])
+
+    // --- La réponse à la requête
+    res.json({
+      infosSupplementaires : infosSupplementaires[0]
+    });
+  })
 }
 
 
