@@ -102,11 +102,14 @@ export default function (app, connection, authMiddleware)
   {
     let idMedicament = req.params.idMedicament;
 
-    let [infosSupplementaires] = await connection.query('SELECT * FROM relations_pharmacies_medicaments WHERE identifiant_medicament = ?',[idMedicament])
+    let [infos_supplementaires] = await connection.query('SELECT identifiant, nom, adresse, longitude, latitude, ville, code_postal, identifiant_medicament, quantite FROM relations_pharmacies_medicaments'
+      +' INNER JOIN pharmacies'
+      +' ON relations_pharmacies_medicaments.identifiant_pharmacie = pharmacies.identifiant'
+      +' WHERE identifiant_medicament = ?',[idMedicament])
 
     // --- La réponse à la requête
     res.json({
-      infosSupplementaires : infosSupplementaires[0]
+      infos_supplementaires : infos_supplementaires
     });
   })
 }

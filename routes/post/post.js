@@ -138,20 +138,33 @@ export default function (app, connection, sendMyMail, authMiddleware)
     });
   })
 
-  //-----------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------
-  app.post('/addfavoris', authMiddleware, async function(req,res) 
-  {
+  app.post('/addfavoris', authMiddleware, async function(req, res) {
     let idMedicament = req.body.idMedicament;
     let idCompte = req.body.idCompte;
 
-    connection.query('INSERT INTO favoris (id_medicament, id_compte) VALUES (?, ?)',[idMedicament, idCompte])
+    // --- On récupère les favoris de l'utilisateur
+    let [favoris] = await connection.query('SELECT * FROM favoris WHERE id_compte = ?', [idCompte]);
+
+    // --- On teste si le favoris à ajouter existe déjà
+    let existeDeja = favoris.some(favori => favoris.id_medicament === idMedicament);
+
+    if (existeDeja) {
+        // --- Si le favoris existe déjà, on renvoie une réponse appropriée
+        return res.status(400).json({
+            status: "error",
+            message: "Ce médicament est déjà dans vos favoris."
+        });
+    }
+
+    // --- S'il n'existe pas, on fait la requête suivante
+    await connection.query('INSERT INTO favoris (id_medicament, id_compte) VALUES (?, ?)', [idMedicament, idCompte]);
 
     // --- La réponse à la requête
     res.json({
-      status : "ok"
+        status: "ok",
+        message: "Médicament ajouté aux favoris avec succès."
     });
-  })
+  });
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
@@ -166,5 +179,3 @@ export default function (app, connection, sendMyMail, authMiddleware)
     });
   })
 }
-
-
