@@ -22,5 +22,5 @@ Pour utiliser l'API, clonez le dépôt et installez les dépendances nécessaire
 ```bash
 git clone https://github.com/Pharmeo/Pharmeo-api.git
 cd Pharmeo-api
-npm install
+npm install bcrypt, cors, dotenv, express, jsonwebtoken, mysql2 ,nodemailer, nodemon
 ```
