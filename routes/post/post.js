@@ -39,6 +39,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
   {
     let to = req.body.to;
 
+    // --- On vérifie la présence de l'utilisateur dans la base
     const [user] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[to]);
 
     if (user.length === 0) {
@@ -138,24 +139,30 @@ export default function (app, connection, sendMyMail, authMiddleware)
     });
   })
 
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
   app.post('/addfavoris', authMiddleware, async function(req, res) {
     let idMedicament = req.body.idMedicament;
     let idCompte = req.body.idCompte;
 
     // --- On récupère les favoris de l'utilisateur
     let [favoris] = await connection.query('SELECT * FROM favoris WHERE id_compte = ?', [idCompte]);
-
+    
     // --- On teste si le favoris à ajouter existe déjà
-    let existeDeja = favoris.some(favori => favoris.id_medicament === idMedicament);
+    let existeDeja = favoris.some(f => {
+      console.log('Comparing:', f.id_medicament, 'with', idMedicament);
+      return f.id_medicament.toString() === idMedicament.toString();
+    });  
 
+    // --- Si le favoris existe déjà, on renvoie une réponse appropriée
     if (existeDeja) {
-        // --- Si le favoris existe déjà, on renvoie une réponse appropriée
-        return res.status(400).json({
-            status: "error",
+        
+        return res.json({
+            status: "erreur",
             message: "Ce médicament est déjà dans vos favoris."
         });
     }
-
+    
     // --- S'il n'existe pas, on fait la requête suivante
     await connection.query('INSERT INTO favoris (id_medicament, id_compte) VALUES (?, ?)', [idMedicament, idCompte]);
 
