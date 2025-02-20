@@ -14,6 +14,7 @@ Cette API est conçue pour deux types d'utilisateurs :
 - **Gestion des médicaments** : Accédez aux informations détaillées sur les médicaments disponibles dans les pharmacies, y compris les quantités, les effets secondaires et la composition.
 - **Gestion des stocks** : Permet aux pharmaciens de suivre et de gérer les niveaux de stock de médicaments.
 - **Gestion du personnel** : Outils pour gérer les informations et les horaires du personnel de la pharmacie.
+- **Gestion des favoris** : Permet de sauvegarder les favoris de chacun des clients.
 
 ## Installation
 
@@ -22,5 +23,6 @@ Pour utiliser l'API, clonez le dépôt et installez les dépendances nécessaire
 ```bash
 git clone https://github.com/Pharmeo/Pharmeo-api.git
 cd Pharmeo-api
+npm install
 npm install bcrypt, cors, dotenv, express, jsonwebtoken, mysql2 ,nodemailer, nodemon
 ```
