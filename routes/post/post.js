@@ -185,4 +185,25 @@ export default function (app, connection, sendMyMail, authMiddleware)
       id_compte : idCompte
     });
   })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.post('/createMedicament', async function(req, res)
+  {
+    // --- On récupère les données sur le medicament envoyé dans le body en json
+    let nom  = req.body.nom;
+    let zone_action = req.body.zone_action;
+    let effets_secondaires = req.body.effets_secondaires;
+    let composition = req.body.composition;
+    let description = req.body.description;
+
+    // --- Création de la requête sql
+    await connection.query('INSERT INTO medicaments (nom, zone_action, effets_secondaires, composition, description) VALUES (?,?,?,?,?)', 
+    [nom, zone_action, effets_secondaires, composition, description]);
+
+    // --- Renvoie de la réponse
+    res.json({
+      status : "ok"
+    });
+  });
 }
