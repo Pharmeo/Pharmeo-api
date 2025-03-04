@@ -121,7 +121,7 @@ export default function (app, connection, authMiddleware)
 
     // --- La réponse à la requête
     res.json({
-      comptes : comptes[0]
+      comptes : comptes
     });
   })
 }

@@ -17,7 +17,6 @@ export default function (app, connection, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  // TODO : Faire la route pour supprimer un médicament
   app.delete('/medicament/:idMedicament', authMiddleware, async function(req,res) 
   {
     let idCompte = req.params.idMedicament;
@@ -32,7 +31,6 @@ export default function (app, connection, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  // TODO : Faire une route pour supprimer un compte (un pharmacien)
   app.delete('/compte/:idCompte', authMiddleware, async function(req,res) 
   {
     let idCompte = req.params.idCompte;
