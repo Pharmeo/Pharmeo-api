@@ -201,6 +201,8 @@ export default function (app, connection, sendMyMail, authMiddleware)
     await connection.query('INSERT INTO medicaments (nom, zone_action, effets_secondaires, composition, description) VALUES (?,?,?,?,?)', 
     [nom, zone_action, effets_secondaires, composition, description]);
 
+    // TODO : Rajouter de quoi modifier la quantite et la pharmacie
+
     // --- Renvoie de la réponse
     res.json({
       status : "ok"

@@ -14,4 +14,34 @@ export default function (app, connection, authMiddleware)
       status : "ok"
     });
   })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  // TODO : Faire la route pour supprimer un médicament
+  app.delete('/medicament/:idMedicament', authMiddleware, async function(req,res) 
+  {
+    let idCompte = req.params.idMedicament;
+
+    connection.query('DELETE FROM medicaments WHERE identifiant = ?',[idCompte])
+
+    // --- La réponse à la requête
+    res.json({
+      status : "ok"
+    });
+  })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  // TODO : Faire une route pour supprimer un compte (un pharmacien)
+  app.delete('/compte/:idCompte', authMiddleware, async function(req,res) 
+  {
+    let idCompte = req.params.idCompte;
+
+    connection.query('DELETE FROM comptes WHERE identifiant = ?',[idCompte])
+
+    // --- La réponse à la requête
+    res.json({
+      status : "ok"
+    });
+  })
 }

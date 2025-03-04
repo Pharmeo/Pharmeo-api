@@ -112,6 +112,18 @@ export default function (app, connection, authMiddleware)
       infos_supplementaires : infos_supplementaires
     });
   })
+
+  //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  app.get('/comptes', authMiddleware, async function(req,res) 
+  {
+    let [comptes] = await connection.query('SELECT * FROM comptes')
+
+    // --- La réponse à la requête
+    res.json({
+      comptes : comptes[0]
+    });
+  })
 }
 
 
