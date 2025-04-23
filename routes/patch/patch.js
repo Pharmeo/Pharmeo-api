@@ -27,4 +27,46 @@ export default function (app, connection, authMiddleware)
             status : "Compte mit à jour avec succès"
         });
     });
+
+    //-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
+    // --- Permet de modifier un utilisateur via son nom de compte
+    app.patch('/updateMedicament/:idMedicament/:idPharmacie', authMiddleware, function(req, res)
+    {
+        let idMedicament = req.params.idMedicament;
+        let idPharmacie = req.params.idPharmacie;
+
+        // --- On récupère les données sur le medicament envoyé dans le body en json
+        let nom  = req.body.nom;
+        let zone_action = req.body.zone_action;
+        let effets_secondaires = req.body.effets_secondaires;
+        let composition = req.body.composition;
+        let description = req.body.description;
+        // ---
+        let quantite = req.body.quantite;
+
+        // --- Requête SQL de mise à jour avec INNER JOIN
+        let sql = `
+        UPDATE medicaments
+        INNER JOIN relations_pharmacies_medicaments
+        ON medicaments.identifiant = relations_pharmacies_medicaments.identifiant_medicament
+        SET
+        medicaments.nom = ?,
+        medicaments.zone_action = ?,
+        medicaments.effets_secondaires = ?,
+        medicaments.composition = ?,
+        medicaments.description = ?,
+        relations_pharmacies_medicaments.quantite = ?
+        WHERE
+        medicaments.identifiant = ? AND relations_pharmacies_medicaments.identifiant_pharmacie = ?`;
+
+        // --- Création de la requête sql
+        connection.query(sql, 
+            [nom, zone_action, effets_secondaires, composition, description, quantite, idMedicament, idPharmacie]);
+
+        // --- Renvoie de la réponse
+        res.json({
+            status : "Médicament mit à jour avec succès"
+        });
+    });
 }

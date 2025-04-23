@@ -19,9 +19,7 @@ export default function (app, connection, authMiddleware)
     
     let nameDrug = req.query.name;
     let typeSystem = req.query.system;
-
-    // --- On crée la requête SQL de base
-    let sql = 'SELECT * FROM medicaments';
+    let location = req.query.location;
 
     // --- Création du tableau de valeurs
     let tab = [];
@@ -37,23 +35,46 @@ export default function (app, connection, authMiddleware)
       count++;
     }
 
+    // --- On crée la requête SQL de base
+    let sql = ''; 
+
+    // --- Gestion de la présence dans une pharmacie ou une autre
+    if (location)
+    {
+      sql += 'SELECT medicaments.*, relations_pharmacies_medicaments.quantite FROM medicaments'
+            +' INNER JOIN relations_pharmacies_medicaments'
+            +' ON medicaments.identifiant = relations_pharmacies_medicaments.identifiant_medicament'
+            +' WHERE relations_pharmacies_medicaments.identifiant_pharmacie = ?'
+      tab.push(location);
+      // ---
+      if (count >= 1)
+        {
+          sql += ' AND ';
+        }
+    }
+    else
+    {
+      sql += 'SELECT * FROM medicaments WHERE ';
+    }
+
+    // --- Gestion de la construction de la requête
     if (count == 1)
     {
       if (nameDrug)
       {
-        sql += ' WHERE nom LIKE ?';
+        sql += 'nom LIKE ?';
         tab.push('%'+nameDrug+'%');
       }
       // ---
       if (typeSystem)
         {
-          sql += ' WHERE zone_action LIKE ?';
+          sql += 'zone_action LIKE ?';
           tab.push('%'+typeSystem+'%');
         }
     }
     else if (count == 2)
     {
-      sql += ' WHERE nom LIKE ? AND zone_action LIKE ?';
+      sql += ' nom LIKE ? AND zone_action LIKE ?';
       tab.push('%'+nameDrug+'%', '%'+typeSystem+'%');
     }
 
