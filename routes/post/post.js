@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 import { hashPassword, verifyPassword } from '../../passwordUtils.js';
 
-export default function (app, connection, sendMyMail, authMiddleware) 
+export default function (app, connection, sendMyMail, authMiddleware)
 {
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
@@ -19,13 +19,14 @@ export default function (app, connection, sendMyMail, authMiddleware)
     let adresse = req.body.adresse;
     let ville = req.body.ville;
     let code_postal = req.body.code_postal;
+    let id_pharmacie = req.body.id_pharmacie;
 
     let motDePasseHashe = await hashPassword(mot_de_passe);
     console.log(motDePasseHashe);
 
     // --- Création de la requête sql
-    await connection.query('INSERT INTO comptes (fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal) VALUES (?,?,?,?,?,?,?,?,?,?)', 
-    [fk_profil, nom_compte, motDePasseHashe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal]);
+    await connection.query('INSERT INTO comptes (fk_profil, nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal, id_pharmacie) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+    [fk_profil, nom_compte, motDePasseHashe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal, id_pharmacie]);
 
     // --- Renvoie de la réponse
     res.json({
@@ -47,10 +48,10 @@ export default function (app, connection, sendMyMail, authMiddleware)
           message: "Utilisateur non trouvé"
       });
     }
-    
+
     let firstname = user[0].prenom;
     let password = user[0].mot_de_passe;
-    
+
     sendMyMail(to, firstname, password);
 
     return res.status(200).json({
@@ -72,7 +73,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  app.post('/login', async function(req,res) 
+  app.post('/login', async function(req,res)
   {
     let name = req.body.name;
     let [compte] = await connection.query('SELECT * FROM comptes WHERE nom_compte=? ',[name])
@@ -88,7 +89,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
     // --- Hashage et vérification du mot de passe
     let motDePasseHashe = await hashPassword(formPassword, (err, hashedPassword) => {
-      if (err) 
+      if (err)
       {
           console.error('Erreur lors du hachage du mot de passe:', err);
           return;
@@ -128,7 +129,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  app.post('/oublimdp', authMiddleware, async function(req,res) 
+  app.post('/oublimdp', authMiddleware, async function(req,res)
   {
     let name = req.body.name;
 
@@ -147,22 +148,22 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
     // --- On récupère les favoris de l'utilisateur
     let [favoris] = await connection.query('SELECT * FROM favoris WHERE id_compte = ?', [idCompte]);
-    
+
     // --- On teste si le favoris à ajouter existe déjà
     let existeDeja = favoris.some(f => {
       console.log('Comparing:', f.id_medicament, 'with', idMedicament);
       return f.id_medicament.toString() === idMedicament.toString();
-    });  
+    });
 
     // --- Si le favoris existe déjà, on renvoie une réponse appropriée
     if (existeDeja) {
-        
+
         return res.json({
             status: "erreur",
             message: "Ce médicament est déjà dans vos favoris."
         });
     }
-    
+
     // --- S'il n'existe pas, on fait la requête suivante
     await connection.query('INSERT INTO favoris (id_medicament, id_compte) VALUES (?, ?)', [idMedicament, idCompte]);
 
@@ -175,12 +176,12 @@ export default function (app, connection, sendMyMail, authMiddleware)
 
   //-----------------------------------------------------------------------------
   //-----------------------------------------------------------------------------
-  app.post('/id', authMiddleware, async function(req,res) 
+  app.post('/id', authMiddleware, async function(req,res)
   {
     let nom_compte = req.body.nom_compte;
     let [compte] = await connection.query('SELECT * FROM comptes WHERE nom_compte = ?',[nom_compte])
-    let idCompte = compte[0].identifiant;    
-    
+    let idCompte = compte[0].identifiant;
+
     res.json({
       id_compte : idCompte
     });
@@ -198,7 +199,7 @@ export default function (app, connection, sendMyMail, authMiddleware)
     let description = req.body.description;
 
     // --- Création de la requête sql
-    await connection.query('INSERT INTO medicaments (nom, zone_action, effets_secondaires, composition, description) VALUES (?,?,?,?,?)', 
+    await connection.query('INSERT INTO medicaments (nom, zone_action, effets_secondaires, composition, description) VALUES (?,?,?,?,?)',
     [nom, zone_action, effets_secondaires, composition, description]);
 
     // TODO : Rajouter de quoi modifier la quantite et la pharmacie

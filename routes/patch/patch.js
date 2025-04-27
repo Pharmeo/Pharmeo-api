@@ -1,4 +1,4 @@
-export default function (app, connection, authMiddleware) 
+export default function (app, connection, authMiddleware)
 {
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
@@ -6,7 +6,7 @@ export default function (app, connection, authMiddleware)
     app.patch('/updateClient', authMiddleware, function(req, res)
     {
         // --- On récupère les données sur le client envoyé dans le body en json
-        let compteAModifier = req.body.compte_a_modifier.nom_compte;        
+        let compteAModifier = req.body.compte_a_modifier.nom_compte;
 
         let nom_compte = req.body.nom_compte;
         let mot_de_passe = req.body.mot_de_passe;
@@ -17,10 +17,11 @@ export default function (app, connection, authMiddleware)
         let adresse = req.body.adresse;
         let ville = req.body.ville;
         let code_postal = req.body.code_postal;
+        let id_pharmacie = req.body.id_pharmacie;
 
         // --- Création de la requête sql
-        connection.query("UPDATE comptes SET nom_compte=?, mot_de_passe=?, nom=?, prenom=?, numero_telephone=?, mail=?, adresse=?, ville=?, code_postal=? WHERE nom_compte=?", 
-        [nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal, compteAModifier]);
+        connection.query("UPDATE comptes SET nom_compte=?, mot_de_passe=?, nom=?, prenom=?, numero_telephone=?, mail=?, adresse=?, ville=?, code_postal=?, id_pharmacie=? WHERE nom_compte=?",
+        [nom_compte, mot_de_passe, nom, prenom, numero_telephone, mail, adresse, ville, code_postal, id_pharmacie, compteAModifier]);
 
         // --- Renvoie de la réponse
         res.json({
@@ -61,7 +62,7 @@ export default function (app, connection, authMiddleware)
         medicaments.identifiant = ? AND relations_pharmacies_medicaments.identifiant_pharmacie = ?`;
 
         // --- Création de la requête sql
-        connection.query(sql, 
+        connection.query(sql,
             [nom, zone_action, effets_secondaires, composition, description, quantite, idMedicament, idPharmacie]);
 
         // --- Renvoie de la réponse
